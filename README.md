@@ -1,8 +1,8 @@
-# Palacin Booking API
+# 📅 Palacin Booking API
 
 REST API to manage experiences, sessions and seat reservations with strict business invariants and concurrency-safe booking. Implements capacity control, same-day session uniqueness, 24h cancellation policy, past-date guards, and email notification hooks (`null://null` transport as required). Built with Symfony 8.1, DDD + Hexagonal Architecture for long-term maintainability, REST principles, SQLite for local dev and MySQL for Docker, with optimistic locking (`UPDATE ... WHERE available_seats >= :seats`) to handle high-contention sell-outs.
 
-## Features
+## ✨ Features
 
 - Create experiences with provider ID
 - Create sessions per experience (validates: no past dates, no duplicate same-day session per experience)
@@ -11,9 +11,9 @@ REST API to manage experiences, sessions and seat reservations with strict busin
 - Email hook on create/cancel via `ReservationNotifierInterface` / `MailerReservationNotifier`
 - Concurrency-safe: `UPDATE sessions SET available_seats = available_seats - :seats WHERE available_seats >= :seats`
 
-## Local setup (without Docker)
+## 💻 Local setup (without Docker)
 
-### Requirements
+### 📋 Requirements
 
 - PHP 8.3+
 - `pdo_sqlite` extension enabled.
@@ -41,7 +41,7 @@ php bin/phpunit
 
 No Docker or external services required: uses SQLite (var/data.db) by default.
 
-## Email notifications - local verification
+## ✉️ Email notifications - local verification
 
 Per the requirements, `MAILER_DSN=null://null` in `.env`, so no real email is sent.
 The implementation is still wired: `ReserveSeatsHandler` calls
@@ -92,9 +92,9 @@ Then:
 
 Revert to the clean version before committing.
 
-## Deployment with Docker (production/staging)
+## 🐳 Deployment with Docker (production/staging)
 
-### Requirements for Docker
+### 📋 Requirements for Docker
 
 - Docker
 - Docker Compose v2
