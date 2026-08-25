@@ -12,7 +12,7 @@ RUN apk add --no-cache icu-dev libzip-dev oniguruma-dev postgresql-dev \
 
 WORKDIR /var/www/app
 COPY --from=vendor /app /var/www/app
-RUN mkdir -p var && chmod -R 777 var
+RUN touch .env && mkdir -p var && chmod -R 777 var
 
 EXPOSE 10000
 CMD sh -c "php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || true && php -S 0.0.0.0:\${PORT:-10000} -t public"
