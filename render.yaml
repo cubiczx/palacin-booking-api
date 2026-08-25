@@ -16,9 +16,18 @@ services:
             name: palacin-db
             property: connectionString
 
-    - type: psql
+    - type: private
       name: palacin-db
+      env: docker
+      image:
+        url: postgres:16-alpine
       plan: free
-      ipAllowList: []
+      envVars:
+        - key: POSTGRES_USER
+          value: palacin
+        - key: POSTGRES_PASSWORD
+          value: palacin
+        - key: POSTGRES_DB
+          value: palacin_booking
     # Usamos psql nativo de Render
     # Si tu Render ya tiene tipo psql, cambia pserv por psql
