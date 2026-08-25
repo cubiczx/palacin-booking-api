@@ -15,4 +15,4 @@ COPY --from=vendor /app /var/www/app
 RUN touch .env && mkdir -p var && chmod -R 777 var
 
 EXPOSE 10000
-CMD sh -c "php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || true && php -S 0.0.0.0:\${PORT:-10000} -t public"
+CMD sh -c "rm -rf var/cache/* && php bin/console cache:warmup --env=prod && php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || true && php -S 0.0.0.0:\${PORT:-10000} -t public"
