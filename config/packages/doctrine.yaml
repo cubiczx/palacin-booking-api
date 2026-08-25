@@ -7,6 +7,14 @@ doctrine:
         #server_version: '16'
 
         profiling_collect_backtrace: '%kernel.debug%'
+
+        types:
+            experience_id: App\Catalog\Infrastructure\Doctrine\Type\ExperienceIdType
+            session_id: App\Catalog\Infrastructure\Doctrine\Type\SessionIdType
+            provider_id: App\Catalog\Infrastructure\Doctrine\Type\ProviderIdType
+            reservation_id: App\Booking\Infrastructure\Doctrine\Type\ReservationIdType
+            user_id: App\Booking\Infrastructure\Doctrine\Type\UserIdType
+            money_type: App\Shared\Infrastructure\Doctrine\Type\MoneyType
     orm:
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -14,12 +22,21 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            App:
-                type: attribute
+            Shared:
+                type: xml
+                dir: '%kernel.project_dir%/src/Shared/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Shared\Domain\ValueObject'
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+            Catalog:
+                type: xml
+                dir: '%kernel.project_dir%/src/Catalog/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Catalog\Domain\Model'
+                is_bundle: false
+            Booking:
+                type: xml
+                dir: '%kernel.project_dir%/src/Booking/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Booking\Domain\Model'
+                is_bundle: false
 
 when@test:
     doctrine:
