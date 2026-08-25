@@ -16,7 +16,7 @@ services:
             name: palacin-db
             property: connectionString
 
-    - type: private
+    - type: pserv
       name: palacin-db
       env: docker
       image:
