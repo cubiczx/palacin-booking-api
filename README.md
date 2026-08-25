@@ -1,6 +1,6 @@
-## Puesta en marcha en local (sin Docker)
+## Local setup (without Docker)
 
-Requisitos: PHP 8.3+, Composer, extensión `pdo_sqlite` habilitada.
+Requirements: PHP 8.3+, Composer, `pdo_sqlite` extension enabled.
 
 ```bash
 composer install
@@ -8,44 +8,44 @@ composer install
 php bin/console doctrine:migrations:migrate --no-interaction
 
 symfony server:start
-# o alternativamente: php -S 127.0.0.1:8000 -t public
+# or alternatively: php -S 127.0.0.1:8000 -t public
 ```
 
-- API disponible en `http://127.0.0.1:8000/api`
-- Swagger UI en `http://127.0.0.1:8000/api/doc`
-- Swagger JSON en `http://127.0.0.1:8000/api/doc.json`
+- API available at `http://127.0.0.1:8000/api`
+- Swagger UI at `http://127.0.0.1:8000/api/doc`
+- Swagger JSON at `http://127.0.0.1:8000/api/doc.json`
 
 Tests:
 ```bash
 php bin/phpunit
 ```
 
-No requiere Docker ni servicios externos: usa SQLite (`var/data.db`) por defecto.
+No Docker or external services required: uses SQLite (var/data.db) by default.
 
-## Despliegue con Docker (producción/staging)
+## Deployment with Docker (production/staging)
 
-> **Nota**: esta configuración es una referencia de despliegue estándar
-> (PHP-FPM + Nginx + MySQL, build multi-stage), pero no ha sido verificada
-> en el entorno de desarrollo de este repositorio. El desarrollo local usa
-> SQLite (ver sección "Puesta en marcha") precisamente para no depender de
-> Docker. Antes de usar esta configuración en un entorno real, valida el
-> arranque completo (`docker compose up --build`), las migraciones y las
-> variables de entorno en un entorno de staging.
+> **Note**: this configuration is a standard deployment reference
+> (PHP-FPM + Nginx + MySQL, multi-stage build), but it has not been verified
+> in the development environment of this repository. Local development uses
+> SQLite (see "Local setup" section) precisely to avoid depending on
+> Docker. Before using this configuration in a real environment, validate
+> the full boot (docker compose up --build), migrations and environment
+> variables in a staging environment.
 
-1. Copia `.env.prod.example` a `.env.prod` y rellena los valores.
-2. Levanta los servicios:
+1. Copy `.env.prod.example` to `.env.prod` and fill in the values.
+2. Bring up the services:
 ```bash
    docker compose --env-file .env.prod up --build -d
 ```
-3. Ejecuta las migraciones dentro del contenedor `php`:
+3. Run migrations inside the `php` container:
 ```bash
    docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
 ```
-4. La API queda expuesta en `http://localhost:8080`, y Swagger UI en
+4. The API is exposed at `http://localhost:8080`, and Swagger UI at
    `http://localhost:8080/api/doc`.
 
-La base de datos en producción es **MySQL** (vía `docker-compose`), mientras
-que en desarrollo local se usa **SQLite** — el dominio y la capa de
-aplicación son idénticos en ambos casos; sólo cambia `DATABASE_URL`. El
-mecanismo de control de aforo (`UPDATE ... WHERE available_seats >= :seats`)
-es compatible con ambos motores.
+The production database is MySQL (via docker-compose), while
+local development uses SQLite — the domain and application layers are
+identical in both cases; only DATABASE_URL changes. The seat-availability
+control mechanism (UPDATE ... WHERE available_seats >= :seats)
+is compatible with both engines.
