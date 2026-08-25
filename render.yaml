@@ -9,6 +9,12 @@ services:
       envVars:
         - key: APP_ENV
           value: prod
+        - key: APP_SECRET
+          generateValue: true
+        - key: APP_SHARE_DIR
+          value: var/share
+        - key: DEFAULT_URI
+          value: https://palacin-booking-api.onrender.com
         - key: MAILER_DSN
           value: null://null
         - key: DATABASE_URL
