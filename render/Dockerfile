@@ -7,7 +7,7 @@ COPY . .
 RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 
 FROM php:8.4-cli-alpine
-RUN apk add --no-cache icu-dev libzip-dev oniguruma-dev \
+RUN apk add --no-cache icu-dev libzip-dev oniguruma-dev postgresql-dev \
     && docker-php-ext-install pdo_mysql pdo_pgsql intl zip opcache
 
 WORKDIR /var/www/app
