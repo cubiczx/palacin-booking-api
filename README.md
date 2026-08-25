@@ -2,6 +2,21 @@
 
 REST API to manage experiences, sessions and seat reservations with strict business invariants and concurrency-safe booking. Implements capacity control, same-day session uniqueness, 24h cancellation policy, past-date guards, and email notification hooks (`null://null` transport as required). Built with Symfony 8.1, DDD + Hexagonal Architecture for long-term maintainability, REST principles, SQLite for local dev and MySQL for Docker, with optimistic locking (`UPDATE ... WHERE available_seats >= :seats`) to handle high-contention sell-outs.
 
+## 🚀 Live Demo
+
+The API is deployed on Render (free tier - it may take ~30s to wake up on first request):
+
+**Swagger UI / OpenAPI Docs:** https://palacin-booking-api.onrender.com/api/doc
+
+**Base URL:** `https://palacin-booking-api.onrender.com/api`
+
+### Production Stack on Render
+- **PHP 8.4 + Symfony 7 + API Platform**
+- **PostgreSQL 16** (Render managed PostgreSQL)
+- Local dev still uses SQLite / MySQL via `docker compose`. For Render, MySQL migrations (`LONGTEXT`, `DATETIME`) are automatically converted to Postgres-compatible types (`TEXT`, `TIMESTAMP`) during deploy via `render/migrations/` override in the Dockerfile.
+
+> Note: Free tier spins down after inactivity. If you get a 500/timeout on first hit, wait 30s and reload.
+
 ## ✨ Features
 
 - Create experiences with provider ID
@@ -41,7 +56,7 @@ php bin/phpunit
 
 No Docker or external services required: uses SQLite (var/data.db) by default.
 
-## ✉️ Email notifications - local verification
+## ✉ Email notifications - local verification
 
 Per the requirements, `MAILER_DSN=null://null` in `.env`, so no real email is sent.
 The implementation is still wired: `ReserveSeatsHandler` calls
@@ -129,7 +144,18 @@ identical in both cases; only DATABASE_URL changes. The seat-availability
 control mechanism (UPDATE ... WHERE available_seats >= :seats)
 is compatible with both engines.
 
-## 👨‍💻 Autor
+## ☁️ Deployment on Render (PostgreSQL)
+
+This repo includes `render.yaml` and `render/Dockerfile` for one-click deploy on Render.
+
+The `render/Dockerfile` swaps `migrations/*.php` with `render/migrations/*.php` at boot time to convert MySQL-specific types (`LONGTEXT` -> `TEXT`) to PostgreSQL 16 compatible types, keeping local MySQL untouched.
+
+Environment variables required on Render:
+
+- `DATABASE_URL` (PostgreSQL internal URL with `?serverVersion=16.0.0`)
+- `APP_ENV=prod`, `APP_SECRET`, `DEFAULT_URI=https://palacin-booking-api.onrender.com`, `APP_SHARE_DIR=var/share`, `MAILER_DSN=null://null`
+
+## 👨💻 Autor
 
 **Xavier Palacín Ayuso**
 Email: [cubiczx@hotmail.com](cubiczx@hotmail.com)
