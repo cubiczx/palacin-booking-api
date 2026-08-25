@@ -16,9 +16,9 @@ services:
             name: palacin-db
             property: connectionString
 
-    - type: pserv
+    - type: psql
       name: palacin-db
-      env: docker
       plan: free
+      ipAllowList: []
     # Usamos psql nativo de Render
     # Si tu Render ya tiene tipo psql, cambia pserv por psql
