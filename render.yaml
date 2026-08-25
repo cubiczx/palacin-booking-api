@@ -7,28 +7,18 @@ services:
       plan: free
       healthCheckPath: /api
       envVars:
-              - key: APP_ENV
-                value: prod
-              - key: MAILER_DSN
-                value: null://null
-              - key: DATABASE_URL
-                fromDatabase:
-                  name: palacin-mysql
-                  property: connectionString
-                  # Render lo genera como mysql://user:pass@host:3306/db
+        - key: APP_ENV
+          value: prod
+        - key: MAILER_DSN
+          value: null://null
+        - key: DATABASE_URL
+          fromDatabase:
+            name: palacin-db
+            property: connectionString
 
     - type: pserv
-      name: palacin-mysql
+      name: palacin-db
       env: docker
-      image:
-        url: mysql:8.0
       plan: free
-      envVars:
-              - key: MYSQL_ROOT_PASSWORD
-                generateValue: true
-              - key: MYSQL_DATABASE
-                value: palacin_booking
-              - key: MYSQL_USER
-                value: palacin
-              - key: MYSQL_PASSWORD
-                generateValue: true
+    # Usamos psql nativo de Render
+    # Si tu Render ya tiene tipo psql, cambia pserv por psql
