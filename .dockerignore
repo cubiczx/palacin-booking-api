@@ -1,0 +1,8 @@
+var/
+vendor/
+.git/
+tests/
+.env
+.env.local
+.env.dev
+.env.test

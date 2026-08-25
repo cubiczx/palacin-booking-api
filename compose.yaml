@@ -1,0 +1,46 @@
+services:
+    php:
+        build:
+            context: .
+            target: php
+        environment:
+            APP_ENV: prod
+            APP_SECRET: ${APP_SECRET}
+            DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE}?serverVersion=8.0
+            MAILER_DSN: ${MAILER_DSN:-null://null}
+        depends_on:
+            database:
+                condition: service_healthy
+        volumes:
+            - app_var:/var/www/app/var
+        restart: unless-stopped
+
+    nginx:
+        build:
+            context: .
+            target: nginx
+        ports:
+            - "8080:80"
+        depends_on:
+            - php
+        restart: unless-stopped
+
+    database:
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        volumes:
+            - db_data:/var/lib/mysql
+        restart: unless-stopped
+
+volumes:
+    db_data:
+    app_var:
