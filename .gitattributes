@@ -1,0 +1,20 @@
+# Todo texto en LF en el repo
+* text=auto eol=lf
+
+# Scripts y Docker OBLIGATORIO LF
+*.sh text eol=lf
+bin/* text eol=lf
+Dockerfile text eol=lf
+docker/nginx/* text eol=lf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+
+# Si algún día necesitas un .bat/.ps1 en CRLF
+*.bat text eol=crlf
+*.ps1 text eol=crlf
