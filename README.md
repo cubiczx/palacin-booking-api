@@ -11,7 +11,7 @@ The API is deployed on Render (free tier - it may take ~30s to wake up on first 
 **Base URL:** `https://palacin-booking-api.onrender.com/api`
 
 ### Production Stack on Render
-- **PHP 8.4 + Symfony 7 + API Platform**
+- **PHP 8.4 + Symfony 8 + API Platform**
 - **PostgreSQL 16** (Render managed PostgreSQL)
 - Local dev still uses SQLite / MySQL via `docker compose`. For Render, MySQL migrations (`LONGTEXT`, `DATETIME`) are automatically converted to Postgres-compatible types (`TEXT`, `TIMESTAMP`) during deploy via `render/migrations/` override in the Dockerfile.
 
