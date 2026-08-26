@@ -43,6 +43,7 @@ COPY --from=composer_build /app /var/www/app
 
 RUN addgroup -g 1000 app \
     && adduser -D -u 1000 -G app app \
+    && mkdir -p /var/www/app/var \
     && chown -R app:app /var/www/app/var
 
 USER app
