@@ -39,14 +39,14 @@ RUN { \
 
 WORKDIR /var/www/app
 
-COPY --from=composer_build /app /var/www/app
+# We copy by assigning ownership to www-data from the source
+COPY --chown=www-data:www-data --from=composer_build /app /var/www/app
 
-RUN addgroup -g 1000 app \
-    && adduser -D -u 1000 -G app app \
-    && mkdir -p /var/www/app/var \
-    && chown -R app:app /var/www/app/var
+# We pre-create writable folders if the framework requires them.
+RUN mkdir -p /var/www/app/var/cache /var/www/app/var/log \
+    && chown -R www-data:www-data /var/www/app/var
 
-USER app
+USER www-data
 
 EXPOSE 9000
 CMD ["php-fpm"]
