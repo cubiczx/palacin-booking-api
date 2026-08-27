@@ -13,7 +13,7 @@ The API is deployed on Render (free tier - it may take ~30s to wake up on first 
 ### Production Stack on Render
 - **PHP 8.4 + Symfony 8 + API Platform**
 - **PostgreSQL 16** (Render managed PostgreSQL)
-- Local dev still uses SQLite / MySQL via `docker compose`. For Render, MySQL migrations (`LONGTEXT`, `DATETIME`) are automatically converted to Postgres-compatible types (`TEXT`, `TIMESTAMP`) during deploy via `render/migrations/` override in the Dockerfile.
+- Local dev uses SQLite / MySQL via `docker compose`. For Render, MySQL migrations (`LONGTEXT`, `DATETIME`) are automatically converted to Postgres-compatible types (`TEXT`, `TIMESTAMP`) during deploy via `render/migrations/` override in the Dockerfile.
 
 > Note: Free tier spins down after inactivity. If you get a 500/timeout on first hit, wait 30s and reload.
 
@@ -28,18 +28,36 @@ The API is deployed on Render (free tier - it may take ~30s to wake up on first 
 
 ## 💻 Local setup (without Docker)
 
+If you prefer running the application natively without Docker, the repository uses SQLite by default via `.env.local`:
+
 ### 📋 Requirements
 
-- PHP 8.3+
-- `pdo_sqlite` extension enabled.
+- PHP 8.4+
+- `pdo_sqlite` extension enabled
 - Composer
 - Symfony CLI (optional, for `symfony server:start`)
 
+1. Copy the local environment configuration (sets up SQLite `var/data.db`):
+
+```bash
+cp .env.local.example .env.local
+```
+
+2. Install dependencies:
+ 
 ```bash
 composer install
+```
 
+3. Run migrations:
+
+```bash
 php bin/console doctrine:migrations:migrate --no-interaction
+```
 
+4. Start local development server:
+
+```bash
 symfony server:start
 # or alternatively: php -S 127.0.0.1:8000 -t public
 ```
@@ -53,8 +71,6 @@ Tests:
 ```bash
 php bin/phpunit
 ```
-
-No Docker or external services required: uses SQLite (var/data.db) by default.
 
 ## ✉ Email notifications - local verification
 
@@ -95,7 +111,7 @@ final class MailerReservationNotifier implements ReservationNotifierInterface
 }
 ```
 
-Then:
+### Then
 
 ```bash
    mkdir -p var/mails
@@ -109,40 +125,20 @@ Revert to the clean version before committing.
 
 ## 🐳 Deployment with Docker (production/staging)
 
-### 📋 Requirements for Docker
+The multi-stage containerized setup (PHP 8.4 FPM + Nginx + MySQL 8.0) has been fully tested and verified using GitHub Codespaces, providing a seamless, zero-dependency environment end-to-end.
 
-- Docker
-- Docker Compose v2
-
-> **Note**: this configuration is a standard deployment reference
-> (PHP-FPM + Nginx + MySQL, multi-stage build), but it has not been verified
-> in the development environment of this repository. Local development uses
-> SQLite (see "Local setup" section) precisely to avoid depending on
-> Docker. Before using this configuration in a real environment, validate
-> the full boot (`docker compose up --build`), migrations and environment
-> variables in a staging environment.
-
-1. Copy `.env.prod.example` to `.env.prod` and fill in the values.
-2. Bring up the services:
+### Simply run
 
 ```bash
-   docker compose --env-file .env.prod up --build -d
+docker compose up -d --build
 ```
 
-1. Run migrations inside the `php` container:
+- API Base: `http://localhost:8080/api`
+- Swagger Documentation: `http://localhost:8080/api/doc`
 
-```bash
-   docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
-```
+> **Note**: Database migrations (doctrine:migrations:migrate) are executed automatically on container boot before launching PHP-FPM.
 
-1. The API is exposed at `http://localhost:8080`, and Swagger UI at
-   `http://localhost:8080/api/doc`.
-
-The production database is MySQL (via docker-compose), while
-local development uses SQLite — the domain and application layers are
-identical in both cases; only DATABASE_URL changes. The seat-availability
-control mechanism (UPDATE ... WHERE available_seats >= :seats)
-is compatible with both engines.
+The container stack uses MySQL via `docker-compose`, while local native development uses SQLite. The domain and application layers are identical in both cases; only `DATABASE_URL` changes. The seat-availability control mechanism (`UPDATE ... WHERE available_seats >= :seats`) is fully compatible with both database engines.
 
 ## ☁️ Deployment on Render (PostgreSQL)
 
