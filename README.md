@@ -1,4 +1,4 @@
-# 📅 Palacin Booking API
+# 📅 Palacin Booking API - Technical Challenge of Once For All - Nalanda
 
 REST API to manage experiences, sessions and seat reservations with strict business invariants and concurrency-safe booking. Implements capacity control, same-day session uniqueness, 24h cancellation policy, past-date guards, and email notification hooks (`null://null` transport as required). Built with Symfony 8.1, DDD + Hexagonal Architecture for long-term maintainability, REST principles, SQLite for local dev and MySQL for Docker, with optimistic locking (`UPDATE ... WHERE available_seats >= :seats`) to handle high-contention sell-outs.
 
@@ -11,6 +11,7 @@ The API is deployed on Render (free tier - it may take ~30s to wake up on first 
 **Base URL:** `https://palacin-booking-api.onrender.com/api`
 
 ### Production Stack on Render
+
 - **PHP 8.4 + Symfony 8 + API Platform**
 - **PostgreSQL 16** (Render managed PostgreSQL)
 - Local dev uses SQLite / MySQL via `docker compose`. For Render, MySQL migrations (`LONGTEXT`, `DATETIME`) are automatically converted to Postgres-compatible types (`TEXT`, `TIMESTAMP`) during deploy via `render/migrations/` override in the Dockerfile.
@@ -44,7 +45,7 @@ cp .env.local.example .env.local
 ```
 
 2. Install dependencies:
- 
+
 ```bash
 composer install
 ```
