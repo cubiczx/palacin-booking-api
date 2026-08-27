@@ -39,14 +39,12 @@ RUN { \
 
 WORKDIR /var/www/app
 
-# We copy by assigning ownership to www-data from the source
+# Copy artifacts
 COPY --chown=www-data:www-data --from=composer_build /app /var/www/app
 
-# We pre-create writable folders if the framework requires them.
+# Create runtime folders
 RUN mkdir -p /var/www/app/var/cache /var/www/app/var/log \
     && chown -R www-data:www-data /var/www/app/var
-
-USER www-data
 
 EXPOSE 9000
 CMD ["php-fpm"]
