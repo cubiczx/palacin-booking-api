@@ -1,5 +1,7 @@
 # 📅 Palacin Booking API - Technical Challenge of Once For All - Nalanda
 
+[Technical Challenge document](prueba-tecnica-gestion-de-reservas-de-experiencias.pdf)
+
 REST API to manage experiences, sessions and seat reservations with strict business invariants and concurrency-safe booking. Implements capacity control, same-day session uniqueness, 24h cancellation policy, past-date guards, and email notification hooks (`null://null` transport as required). Built with Symfony 8.1, DDD + Hexagonal Architecture for long-term maintainability, REST principles, SQLite for local dev and MySQL for Docker, with optimistic locking (`UPDATE ... WHERE available_seats >= :seats`) to handle high-contention sell-outs.
 
 ## 🚀 Live Demo
